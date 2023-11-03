@@ -18,11 +18,10 @@ module LSNN_tb;
 
     // Clock generation
     always begin
-        #1 clk = 1; // Toggle the clock for the first posedge at time 1
-        #1 clk = 0; // Toggle the clock back
-        #6 clk = 1; // Toggle the clock for the second posedge at time 8
-        #1 clk = 0; // Toggle the clock back
+        #5 clk = 0; // Ensure clock is low for a while
+        #5 clk = 1; // Toggle the clock for the positive edge at time 5
     end
+
 
     initial begin
         // Initialize inputs
@@ -44,6 +43,7 @@ module LSNN_tb;
         #10 ui_in = 8'h10; // Spike up
         #10 ui_in = 8'h00; // Spike down
 
+        #1000;
         $finish;
     end
 
