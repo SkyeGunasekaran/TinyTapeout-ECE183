@@ -41,7 +41,7 @@ assign uo_out = (state >= threshold) ? 8'b00000001 : 8'b00000000;
 
 // Update the next state and threshold decay/increase
 // Update the next state and threshold decay/increase
-always @(posedge clk or posedge rst_n) begin
+always @(*) begin
     if (rst_n) begin
         adaptation = alpha;
         threshold = b0j;
