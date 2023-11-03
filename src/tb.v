@@ -1,4 +1,3 @@
-//`include "tt_um_LSNN.v"
 `timescale 1s/1s
 
 module tb;

@@ -14,7 +14,7 @@ module tt_um_LSNN (
 );
 
 // unused wires become 0
-assign uio_in = 8'b0;
+
 assign uio_oe = 8'b0;
 //assign ena = 1'b0;
 
