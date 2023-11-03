@@ -1,3 +1,4 @@
+//`include "tt_um_LSNN.v"
 `timescale 1s/1s
 
 module tb;
@@ -6,13 +7,19 @@ reg        rst_n;
 reg  [7:0] ui_in;
 wire [7:0] uo_out;
 wire [7:0] uio_out;
+wire [7:0] uio_in;
+wire       ena;
+wire [7:0] uio_oe;
 
 tt_um_LSNN uut (
     .clk(clk),
     .rst_n(rst_n),
     .ui_in(ui_in),
     .uo_out(uo_out),
-    .uio_out(uio_out)
+    .uio_out(uio_out),
+    .uio_in(uio_in),
+    .ena(ena),
+    .uio_oe(uio_oe)
 );
 
 // Clock generation
