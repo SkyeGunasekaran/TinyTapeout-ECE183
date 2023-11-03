@@ -45,7 +45,7 @@ assign uo_out = (state >= threshold) ? 8'b00000001 : 8'b00000000;
 always @(*) begin
     next_state = ui_in + (state >> 1); // decay by 50%
     adaptation = (state >= threshold) ? ((adaptation) + (adaptation >> 2)) : ((adaptation >> 1) + (adaptation >> 2)); // 25% increase or decrease
-    threshold = b0j + adaptation; 
+    threshold = (state >= threshold) ? (b0j + adaptation) : (b0j + adaptation); 
 end
 
 // Make threshold viewable
