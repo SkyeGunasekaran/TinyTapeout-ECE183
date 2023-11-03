@@ -16,7 +16,6 @@ module tt_um_LSNN (
 // unused wires become 0
 
 assign uio_oe = 8'b0;
-//assign ena = 1'b0;
 
 // parameters a
 parameter alpha = 8'b00001000;      
@@ -50,6 +49,6 @@ always @(*) begin
 end
 
 // Make threshold viewable
-assign uio_out = threshold;
+//assign uio_out = threshold;
 
 endmodule
