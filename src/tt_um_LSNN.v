@@ -36,6 +36,7 @@ always @(posedge clk or posedge rst_n) begin
         state <= 8'b0;
     end else begin
         state <= next_state;
+        adaptation <= adaptation_temp;
     end
 end
 
@@ -46,15 +47,6 @@ assign uo_out = (state >= threshold) ? 8'b00000001 : 8'b00000000;
 always @(*) begin
     next_state = ui_in + (state >> 1); // decay by 50%
     adaptation_temp = (state >= threshold) ? ((adaptation) + (adaptation >> 2)) : ((adaptation >> 1) + (adaptation >> 2)); // 25% increase or decrease
-end
-
-// Update adaptation on the rising edge of the clock
-always @(posedge clk or posedge rst_n) begin
-    if (rst_n) begin
-        adaptation <= alpha;
-    end else begin
-        adaptation <= adaptation_temp;
-    end
 end
 
 // Make threshold viewable
