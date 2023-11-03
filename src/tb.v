@@ -1,4 +1,3 @@
-`include "tt_um_LSNN.v"
 `default_nettype none
 `timescale 1ns/1ps
 

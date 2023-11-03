@@ -1,5 +1,3 @@
-`default_nettype none
-
 module tt_um_LSNN (
     input  wire       clk,    // Clock input
     input  wire       rst_n,  // Reset signal
@@ -26,29 +24,30 @@ reg [7:0] next_state;
 reg [7:0] adaptation;    
 reg [7:0] threshold;
 reg [7:0] state;
+reg [7:0] adaptation_temp; // Intermediate signal for adaptation
 
 // clock cycle moves up state
 always @(posedge clk or posedge rst_n) begin
     if (rst_n) begin
         state <= 8'b0;
+        adaptation <= alpha;
+        threshold <= b0j;
     end else begin
         state <= next_state;
+        adaptation <= adaptation_temp; // Update adaptation from intermediate signal
+        threshold <= adaptation + b0j; // Update threshold based on adaptation
     end
 end
 
 // assign spike to 0 or 1
 assign uo_out = (state >= threshold) ? 8'b00000001 : 8'b00000000;
 
-// Update the next state and threshold decay/increase
-always @(posedge clk or posedge rst_n) begin
-    if (rst_n) begin
-        adaptation <= alpha;
-        threshold <= b0j;
-    end
-    next_state <= ui_in + (state >> 1); // decay by 50%
-    adaptation <= (state >= threshold) ? ((adaptation) + (adaptation >> 2)) : ((adaptation >> 1) + (adaptation >> 2)); // 25% increase or decrease
-    threshold <= b0j + adaptation;
+// Update the next state and intermediate adaptation
+always @(posedge clk) begin
+    next_state = ui_in + (state >> 1); // decay by 50%
+    adaptation_temp = (state >= threshold) ? ((adaptation) + (adaptation >> 2)) : ((adaptation >> 1) + (adaptation >> 2)); // 25% increase or decrease
 end
+
 // Make threshold viewable
 assign uio_out = threshold;
 
