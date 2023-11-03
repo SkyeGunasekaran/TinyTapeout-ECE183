@@ -46,9 +46,9 @@ always @(posedge clk or posedge rst_n) begin
         adaptation <= alpha;
         threshold <= b0j;
     end else begin
-        next_state <= ui_in + (state >> 1); // decay by 50%
-        adaptation <= (state >= threshold) ? ((adaptation) + (adaptation >> 2)) : ((adaptation >> 1) + (adaptation >> 2)); // Update adaptation from the intermediate value
-        threshold <= b0j + adaptation; // Update threshold based on adaptation
+        next_state = ui_in + (state >> 1); // decay by 50%
+        adaptation = (state >= threshold) ? ((adaptation) + (adaptation >> 2)) : ((adaptation >> 1) + (adaptation >> 2)); // Update adaptation from the intermediate value
+        threshold = b0j + adaptation; // Update threshold based on adaptation
     end
 end
 
