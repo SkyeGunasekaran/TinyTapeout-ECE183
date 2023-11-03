@@ -1,6 +1,6 @@
 --- 
 # Tiny Tapeout project information
-project:
+project: 
   wokwi_id:    0        # If using wokwi, set this to your project's ID
 
 # If using an HDL, set wokwi_id as 0 and uncomment and list your source files here. 
@@ -8,6 +8,7 @@ project:
   source_files:        
     - tt_um_LSNN.v
     - tb.v
+
   top_module:  "tt_um_LSNN"      # Put the name of your top module here, must start with "tt_um_". Make it unique by including your github username
 
 # How many tiles your design occupies? A single tile is about 167x108 uM.
@@ -49,17 +50,17 @@ documentation:
     - clk     Clock input
     - rst_n   Reset signal
     - ui_in   Voltage current
-    - uio_in  Unused 
     - ena     Unused
 
 # A description of what the outputs do (e.g. status LED, SPI MISO, etc)
   outputs:
-    - uio_out Threshold
     - uo_out  Spike output
-    - uio_oe  Unused
 
 # A description of what the bidirectional I/O pins do (e.g. I2C SDA, I2C SCL, etc)
   bidirectional:
+    - uio_in  Unused 
+    - uio_out Threshold
+    - uio_oe  Unused
 
 # The following fields are optional
   tag:          # comma separated list of tags: test, encryption, experiment, clock, animation, utility, industrial, pwm, fpga, alu, microprocessor, risc, riscv, sensor, signal generator, fft, filter, music, bcd, sound, serial, timer, random number generator, calculator, decoder, counter, puzzle, multiplier, game, oscillator,
