@@ -28,8 +28,9 @@ reg [7:0] state;
 
 initial begin
     adaptation <= alpha;
-    threshold <= boj;
+    threshold <= b0j;
 end
+
 // clock cycle moves up state
 always @(posedge clk or posedge rst_n) begin
     if (rst_n) begin
