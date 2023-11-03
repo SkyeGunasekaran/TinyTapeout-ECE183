@@ -30,11 +30,11 @@ reg [7:0] state;
 // clock cycle moves up state
 always @(posedge clk or posedge rst_n) begin
     if (rst_n) begin
-        adaptation <= alpha;
-        threshold <= b0j;
-        state <= 8'b0;
+        adaptation = alpha;
+        threshold = b0j;
+        state = 8'b0;
     end else begin
-        state <= next_state;
+        state = next_state;
     end
 end
 
@@ -49,6 +49,6 @@ always @(*) begin
 end
 
 // Make threshold viewable
-//assign uio_out = threshold;
+assign uio_out = threshold;
 
 endmodule
