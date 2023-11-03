@@ -36,7 +36,7 @@ always @(posedge clk or posedge rst_n) begin
         state = 8'b0;
     end else begin
         state = next_state;
-        check = 1;
+        check = 1'b1;
     end
 end
 
@@ -47,13 +47,13 @@ assign uo_out = (state >= threshold) ? 8'b00000001 : 8'b00000000;
 always @(*) begin
     next_state = ui_in + (state >> 1); // decay by 50%
     adaptation = (state >= threshold) ? ((adaptation) + (adaptation >> 2)) : ((adaptation >> 1) + (adaptation >> 2)); // 25% increase or decrease
-    if (check) begin
+    if (check == 1'b1) begin
         threshold = b0j + adaptation;
     end else begin
-        threshold = threshold;
+        thershold = threshold;
     end
+    check = 1'b0;
 end
-
 // Make threshold viewable
 assign uio_out = threshold;
 
