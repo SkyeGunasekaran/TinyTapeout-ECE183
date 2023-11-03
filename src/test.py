@@ -2,47 +2,27 @@ import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge, FallingEdge, Timer, ClockCycles
 
-
-segments = [ 63, 6, 91, 79, 102, 109, 124, 7, 127, 103 ]
-
+voltage = [12, 53, 1, 0 , 0, 12, 86, 12, 24, 156, 250, 0, 3, 235, 100]
 @cocotb.test()
-async def test_7seg(dut):
+async def test_LSNN(dut):
+    CONSTANT_CURRENT = 40
     dut._log.info("start")
-    clock = Clock(dut.clk, 10, units="us")
+    clock = Clock(dut.clk, 10, units="ms")
     cocotb.start_soon(clock.start())
 
     # reset
     dut._log.info("reset")
     dut.rst_n.value = 0
-    # set the compare value
-    dut.ui_in.value = 1
     await ClockCycles(dut.clk, 10)
     dut.rst_n.value = 1
 
-    # the compare value is shifted 10 bits inside the design to allow slower counting
-    max_count = dut.ui_in.value << 10
-    dut._log.info(f"check all segments with MAX_COUNT set to {max_count}")
-    # check all segments and roll over
-    for i in range(15):
-        dut._log.info("check segment {}".format(i))
-        await ClockCycles(dut.clk, max_count)
-        assert int(dut.segments.value) == segments[i % 10]
+    dut.ui_in.value = CONSTANT_CURRENT 
 
-        # all bidirectionals are set to output
-        assert dut.uio_oe == 0xFF
+    for i in voltage:
+        dut.ui_in.value = i
+        await RisingEdge(dut.clk)
 
-    # reset
-    dut.rst_n.value = 0
-    # set a different compare value
-    dut.ui_in.value = 3
-    await ClockCycles(dut.clk, 10)
-    dut.rst_n.value = 1
-
-    max_count = dut.ui_in.value << 10
-    dut._log.info(f"check all segments with MAX_COUNT set to {max_count}")
-    # check all segments and roll over
-    for i in range(15):
-        dut._log.info("check segment {}".format(i))
-        await ClockCycles(dut.clk, max_count)
-        assert int(dut.segments.value) == segments[i % 10]
-
+    for _ in range(100):
+        await RisingEdge(dut.clk)
+    
+    dut._log.info("Finished Test!")
