@@ -49,9 +49,7 @@ always @(*) begin
     adaptation = (state >= threshold) ? ((adaptation) + (adaptation >> 2)) : ((adaptation >> 1) + (adaptation >> 2)); // 25% increase or decrease
     if (check == 1'b1) begin
         threshold = b0j + adaptation;
-    end else begin
-        thershold = threshold;
-    end
+    end 
     check = 1'b0;
 end
 // Make threshold viewable
