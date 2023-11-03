@@ -24,7 +24,6 @@ reg [7:0] next_state;
 reg [7:0] adaptation;
 reg [7:0] threshold;
 reg [7:0] state;
-reg check;
 
 // Intermediate signal for adaptation
 reg [7:0] adaptation_temp;
