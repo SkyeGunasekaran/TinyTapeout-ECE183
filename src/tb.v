@@ -1,61 +1,47 @@
-//`include "tt_um_LSNN.v"
-`timescale 1s/1s
+`default_nettype none
+`timescale 1ns/1ps
 
-module tb;
-reg        clk;
-reg        rst_n;
-reg  [7:0] ui_in;
-wire [7:0] uo_out;
-wire [7:0] uio_out;
-wire [7:0] uio_in;
-wire       ena;
-wire [7:0] uio_oe;
+/*
+this testbench just instantiates the module and makes some convenient wires
+that can be driven / tested by the cocotb test.py
+*/
 
-tt_um_LSNN uut (
-    .clk(clk),
-    .rst_n(rst_n),
-    .ui_in(ui_in),
-    .uo_out(uo_out),
-    .uio_out(uio_out),
-    .uio_in(uio_in),
-    .ena(ena),
-    .uio_oe(uio_oe)
-);
+// testbench is controlled by test.py
+module tb ();
 
-// Clock generation
-always begin
-    #5 clk = ~clk; // Toggle the clock every 5 time units
-end
+    // this part dumps the trace to a vcd file that can be viewed with GTKWave
+    initial begin
+        $dumpfile ("tb.vcd");
+        $dumpvars (0, tb);
+        #1;
+    end
 
-initial begin
+    // wire up the inputs and outputs
+    reg  clk;
+    reg  rst_n;
+    reg  ena;
+    reg  [7:0] ui_in;
+    reg  [7:0] uio_in;
 
-    // Initialize inputs
-    clk = 0;
-    rst_n = 1;
-    ui_in = 8'h00;
-    #5 rst_n = 0;
-    rst_n = 0;
+    wire [6:0] segments = uo_out[6:0];
+    wire [7:0] uo_out;
+    wire [7:0] uio_out;
+    wire [7:0] uio_oe;
 
-    #10 ui_in = 8'h10; // Spike up
-    #10 ui_in = 8'h20; // Spike up
-    #10 ui_in = 8'h10; // Spike up
-    #10 ui_in = 8'h00; // Spike down
-    #10 ui_in = 8'h10; // Spike up
-    #10 ui_in = 8'h99; // Spike up
-    #10 ui_in = 8'h00; // Spike down
-    #10 ui_in = 8'h00; // Spike down
-    #10 ui_in = 8'h10; // Spike up
-    #10 ui_in = 8'h10; // Spike up
-    #10 ui_in = 8'h00; // Spike down
-
-    $finish;
-end
-
-
-initial begin
-    $monitor("time=%0t: current=%h, spike_out=%h, threshold=%h", $time, ui_in, uo_out, uio_out);
-    $dumpfile("tb.vcd"); 
-    $dumpvars(0, tb);    
-end
+    tt_um_LSNN tt_um_LSNN (
+    // include power ports for the Gate Level test
+    `ifdef GL_TEST
+        .VPWR( 1'b1),
+        .VGND( 1'b0),
+    `endif
+        .ui_in      (ui_in),    // Dedicated inputs
+        .uo_out     (uo_out),   // Dedicated outputs
+        .uio_in     (uio_in),   // IOs: Input path
+        .uio_out    (uio_out),  // IOs: Output path
+        .uio_oe     (uio_oe),   // IOs: Enable path (active high: 0=input, 1=output)
+        .ena        (ena),      // enable - goes high when design is selected
+        .clk        (clk),      // clock
+        .rst_n      (rst_n)     // not reset
+        );
 
 endmodule
